@@ -14,4 +14,4 @@ test2:
     outfile:
       class: File
       name: out.txt
-      size: 40
+      size: 41
