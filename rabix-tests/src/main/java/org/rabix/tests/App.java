@@ -12,6 +12,10 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+
+
+
+import org.rabix.common.helper.JSONHelper;
 //import org.rabix.common.helper.JSONHelper;
 //import org.rabix.common.helper.ResourceHelper;
 import org.yaml.snakeyaml.Yaml;
@@ -23,7 +27,7 @@ public class App {
 		String testDirPath = commandLineArguments[0];
 		String cmd_prefix = commandLineArguments[1];
 		App app = new App();
-		boolean passed = true;
+		boolean passed;
 		int numOfTests = 0;
 		numOfTests = getNumOfTestsInSuite(testDirPath);
 		
@@ -37,8 +41,7 @@ public class App {
 	    		Yaml yaml = new Yaml();
 	    		try {
 					Map<String, Map<String, String>> mapFromYaml = (Map<String, Map<String, String>>) yaml.load(new FileInputStream(new File(child.toString())));
-//					System.out.println(mapFromYaml.keySet());
-//					System.out.println(mapFromYaml.values());  //ovo mozda radi! check it latter
+
 
 					Iterator entries = mapFromYaml.entrySet().iterator();
 					while (entries.hasNext()) {
@@ -48,6 +51,11 @@ public class App {
 					  System.out.println("Running test: " + test_name +"\nWith given details:\n"+ test);
 					  
 					  passed = run_test(test, cmd_prefix);
+					  
+					  if(!passed) {
+						  //test failed
+					  }
+					  
 					  
 					}
 				} catch (FileNotFoundException e) {
@@ -63,36 +71,59 @@ public class App {
 
 	
 	private static boolean run_test(Object test, String cmd_prefix) {
-		
+		boolean passed = true;
 		System.out.println("---- in run_test method:");
 		Map<String, Map<String, String>> testDetails = (Map<String, Map<String, String>>) test;
-		
+			
 		System.out.println("\tapp: " + testDetails.get("app"));
 		System.out.println("\tinputs: " + testDetails.get("inputs"));
 		System.out.println("\truntime: " + String.valueOf(testDetails.get("runtime")));
 		System.out.println("\texpected: " + testDetails.get("expected"));
 		
-		String cmd = cmd_prefix + " -e . " + testDetails.get("app") + " " + testDetails.get("inputs");
+		String cmd = cmd_prefix + " -e . " + testDetails.get("app") + " " + testDetails.get("inputs") +" > result.yaml";
 		System.out.println("\tRunning cmd: "+cmd);
 		Process cmdProc = null;
+//		try {
+//			cmdProc = Runtime.getRuntime().exec(cmd);
+//		} catch (IOException e) {
+//			
+//			e.printStackTrace();
+//		}
+//		int retValue = cmdProc.exitValue();
+//		
+//		System.out.println("returned: " + retValue);
+//		
+//		
+//		if(retValue != 0) passed = false;
+		Yaml resultYML = new Yaml();
+		Map<String, Map<String, String>> result = null;
 		try {
-			cmdProc = Runtime.getRuntime().exec(cmd);
-		} catch (IOException e) {
+			result = (Map<String, Map<String, String>>) resultYML.load(new FileInputStream(new File("/Users/marko/code/bunny/rabix-tests/testbacklog/result.yaml")));
+		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		int retValue = cmdProc.exitValue();
-		
-		System.out.println("returned: " + retValue);
+		passed = checkResult(result, testDetails.get("expected"));
 		
 		
 		
+		return passed;
+	}
+
+
+	private static boolean checkResult(Map<String, Map<String, String>> result, Map<String, String> expected) {
+		
+		String path = result.get("outfile").get("path");
+		
+		System.out.println("output file path: "+ path);
+		String split[] = path.split("/");
+		System.out.println("output file name: " + split[split.length -1]);
 		
 		
 		
 		
 		
-		return true;
+		return false;
 	}
 
 

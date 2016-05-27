@@ -6,12 +6,20 @@ test1:
     outfile:
       class: File
       name: out.txt
-      size: 40
+      size: 37
 test2:
-  app: testbacklog/boysha_grep.cwl.yaml
-  inputs: testbacklog/grep.inputs.yaml
+  app: testbacklog/boysha2_grep.cwl.yaml
+  inputs: testbacklog/grep2.inputs.yaml
   expected:
     outfile:
       class: File
       name: out.txt
-      size: 41
+      size: 25
+test3:
+  app: testbacklog/boysha2_grep.cwl.yaml
+  inputs: testbacklog/grep2.inputs.yaml
+  expected:
+    outfile:
+      class: File
+      name: out.txt
+      size: 25
