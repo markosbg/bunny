@@ -1,0 +1,7 @@
+{
+    "infile": {
+        "path": "/Users/marko/code/bunny/rabix-tests/testbacklog/grep2.inputs.yaml",
+        "class": "File",
+    },
+    "pattern": "class"
+}

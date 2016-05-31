@@ -1,0 +1,7 @@
+{
+    "infile": {
+        "path": "testbacklog/grep.inputs.yaml",
+        "class": "File",
+    },
+    "pattern": "inf"
+}
